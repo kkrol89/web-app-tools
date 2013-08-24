@@ -1,0 +1,22 @@
+#!/bin/bash
+
+BIN_FILE="/home/konrad/webstack/varnish-3.0.4/bin/varnishd/varnishd"
+CONFIG_FILE="/etc/varnish/varnish.conf"
+PID_FILE="/var/run/varnish.pid"
+
+function print_ok_if_success {
+  if [ $? -eq 0 ]; then
+        echo "Done."
+  fi
+}
+
+if [ -f $PID_FILE ]
+then
+  echo "Stopping..."
+  kill `cat ${PID_FILE}`
+  rm $PID_FILE
+fi
+
+echo "Starting..."
+$BIN_FILE -f $CONFIG_FILE -P $PID_FILE -w2,100,300 -a localhost:3101
+print_ok_if_success

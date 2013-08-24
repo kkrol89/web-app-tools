@@ -1,0 +1,22 @@
+#!/bin/bash
+
+BINARY_FILE="/usr/local/sbin/haproxy"
+CONFIG_FILE="/etc/haproxy/haproxy.conf"
+PID_FILE="/var/run/haproxy.pid"
+
+function print_ok_if_success {
+  if [ $? -eq 0 ]; then
+        echo "Done."
+  fi
+}
+
+if [ -f $PID_FILE ]
+then
+  echo "Restarting..."
+  $BINARY_FILE -f $CONFIG_FILE -p $PID_FILE -sf `cat ${PID_FILE}`
+  print_ok_if_success
+else
+  echo "Starting..."
+  $BINARY_FILE -f $CONFIG_FILE -p $PID_FILE
+  print_ok_if_success
+fi

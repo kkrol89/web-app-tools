@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function print_ok_if_success {
+  if [ $? -eq 0 ]; then
+        echo "Done."
+  fi
+}
+
+if [ -f /run/nginx.pid ]
+then
+  echo "Restarting..."
+  /usr/sbin/nginx -s reload
+  print_ok_if_success 
+else
+  echo "Starting..."
+  /usr/sbin/nginx
+  print_ok_if_success 
+fi
